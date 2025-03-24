@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+    <title>Book Club</title>
+    <script 
+      src="https://unpkg.com/react@16/umd/react.development.js" 
+      crossorigin ></script>
+    <script 
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" 
+      crossorigin ></script>
+    <script 
+      src="https://unpkg.com/babel-standalone@6/babel.min.js">
+    </script>
+</head>
+
+<body>
+    <div id="book-club-app" />
+    <script type="text/babel">
+
+     const App = () => (
+        <div>
+            <h1>Welcome to the Book Club!</h1>
+            <Books />
+        </div>
+     );
+     
+     const Books = () => (
+        <div>
+            <table>
+                <tr>
+                    <td>React in Action</td>
+                    <td>Mark Tielens Thomas</td>
+                </tr>
+                <tr>
+                    <td>React Hooks in Action</td>
+                    <td>John Larsen</td>
+                </tr>
+                <tr>
+                    <td>React Native in Action</td>
+                    <td>Nader Dabit</td>
+                </tr>
+            </table>
+        </div>
+     );
+
+     ReactDOM.render(<App />,document.getElementById("book-club-app"));
+    </script>
+</body>
+
+</html>
