@@ -21,8 +21,9 @@ eval "$(fnm env --use-on-cd)"
 # Add govm shim
 add_to_path "$HOME/.govm/shim"
 
-alias gitpushmain="git branch -M main && git add . && git commit -am 'this' && git push -u origin main"
+alias githubauth="gh auth login"
 alias githubnew="gh repo create auth --public --source=. --remote=origin"
+alias gitpushmain="git branch -M main && git add . && git commit -am 'this' && git push -u origin main"
 
 alias python="python3"
 alias pip="pip3"
