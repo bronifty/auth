@@ -42,10 +42,15 @@ run_oauth_servers() {
 
 # Function to recursively delete directories using rimraf
 rimraf() {
-    if [ -z "$1" ]; then
-        echo "Usage: rimraf <directory>"
-        echo "Example: rimraf node_modules"
+    if [ $# -eq 0 ]; then
+        echo "Usage: rimraf <directory1> [directory2 ...]"
+        echo "Example: rimraf node_modules dist build"
         return 1
     fi
-    npx rimraf "$1"
+    
+    # Loop through all arguments
+    for dir in "$@"; do
+        echo "Deleting: $dir"
+        npx rimraf "$dir"
+    done
 }
