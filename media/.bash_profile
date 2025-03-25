@@ -32,4 +32,10 @@ alias pip="pip3"
 echo "PATH components with counts:"
 echo "$PATH" | tr ':' '\n' | sort | uniq -c
 
-
+# Function to run OAuth servers
+run_oauth_servers() {
+    DEBUG=express:* npx concurrently \
+        "npx nodemon authorizationServer.js" \
+        "npx nodemon client.js" \
+        "npx nodemon protectedResource.js"
+}
