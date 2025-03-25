@@ -50,6 +50,10 @@ rimraf() {
     
     # Loop through all arguments
     for dir in "$@"; do
+        if [ ! -d "$dir" ]; then
+            echo "Skipping: $dir (directory does not exist)"
+            continue
+        fi
         echo "Deleting: $dir"
         npx rimraf "$dir"
     done
