@@ -39,3 +39,13 @@ run_oauth_servers() {
         "npx nodemon client.js" \
         "npx nodemon protectedResource.js"
 }
+
+# Function to recursively delete directories using rimraf
+rimraf() {
+    if [ -z "$1" ]; then
+        echo "Usage: rimraf <directory>"
+        echo "Example: rimraf node_modules"
+        return 1
+    fi
+    npx rimraf "$1"
+}
