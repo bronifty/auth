@@ -55,7 +55,7 @@ app.get("/authorize", function (req, res) {
     response_type: "code",
     client_id: client.client_id,
     redirect_uri: client.redirect_uris[0],
-    state: state,
+    state,
   });
 
   console.log("redirect", authorizeUrl);
@@ -93,26 +93,47 @@ app.get("/callback", function (req, res) {
       encodeClientCredentials(client.client_id, client.client_secret),
   };
 
-  var tokRes = request("POST", authServer.tokenEndpoint, {
-    body: form_data,
-    headers: headers,
-  });
+  var tokRes = (async function () {
+    const response = await fetch(authServer.tokenEndpoint, {
+      method: "POST",
+      headers,
+      body: form_data,
+    });
+
+    // Convert fetch Response to match sync-request format
+    return {
+      statusCode: response.status,
+      getBody: async () => {
+        // const body = await response.json();
+        // return JSON.stringify(body);
+        return JSON.stringify(await response.json());
+      },
+    };
+  })();
 
   console.log("Requesting access token for code %s", code);
 
-  if (tokRes.statusCode >= 200 && tokRes.statusCode < 300) {
-    var body = JSON.parse(tokRes.getBody());
-
-    access_token = body.access_token;
-    console.log("Got access token: %s", access_token);
-
-    res.render("index", { access_token: access_token, scope: scope });
-  } else {
-    res.render("error", {
-      error:
-        "Unable to fetch access token, server response: " + tokRes.statusCode,
+  // Handle the Promise
+  tokRes
+    .then(async function (response) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        const body = JSON.parse(await response.getBody());
+        access_token = body.access_token;
+        console.log("Got access token: %s", access_token);
+        res.render("index", { access_token: access_token, scope: scope });
+      } else {
+        res.render("error", {
+          error:
+            "Unable to fetch access token, server response: " +
+            response.statusCode,
+        });
+      }
+    })
+    .catch(function (error) {
+      res.render("error", {
+        error: "Error fetching access token: " + error.message,
+      });
     });
-  }
 });
 
 app.get("/fetch_resource", function (req, res) {
@@ -127,8 +148,8 @@ var buildUrl = function (base, options, hash) {
   if (!newUrl.query) {
     newUrl.query = {};
   }
-  __.each(options, function (value, key, list) {
-    newUrl.query[key] = value;
+  Object.keys(options).forEach(function (key) {
+    newUrl.query[key] = options[key];
   });
   if (hash) {
     newUrl.hash = hash;
