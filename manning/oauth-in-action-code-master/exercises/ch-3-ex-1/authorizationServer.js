@@ -70,7 +70,11 @@ app.get("/authorize", function (req, res) {
   } else {
     var rscope = req.query.scope ? req.query.scope.split(" ") : undefined;
     var cscope = client.scope ? client.scope.split(" ") : undefined;
-    if (__.difference(rscope, cscope).length > 0) {
+    if (
+      rscope &&
+      cscope &&
+      rscope.filter((scope) => !cscope.includes(scope)).length > 0
+    ) {
       // client asked for a scope it couldn't have
       var urlParsed = url.parse(req.query.redirect_uri);
       delete urlParsed.search; // this is a weird behavior of the URL library
