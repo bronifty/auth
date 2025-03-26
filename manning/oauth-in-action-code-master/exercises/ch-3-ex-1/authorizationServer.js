@@ -39,9 +39,13 @@ var codes = {};
 var requests = {};
 
 var getClient = function (clientId) {
-  return __.find(clients, function (client) {
-    return client.client_id == clientId;
+  let foundClient = null;
+  clients.forEach(function (client) {
+    if (client.client_id == clientId) {
+      foundClient = client;
+    }
   });
+  return foundClient;
 };
 
 app.get("/", function (req, res) {
@@ -55,7 +59,7 @@ app.get("/authorize", function (req, res) {
     console.log("Unknown client %s", req.query.client_id);
     res.render("error", { error: "Unknown client" });
     return;
-  } else if (!__.contains(client.redirect_uris, req.query.redirect_uri)) {
+  } else if (!client.redirect_uris.includes(req.query.redirect_uri)) {
     console.log(
       "Mismatched redirect URI, expected %s got %s",
       client.redirect_uris,
