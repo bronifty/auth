@@ -39,7 +39,7 @@ var access_token = null;
 var scope = null;
 
 app.get("/", function (req, res) {
-  res.render("index", { access_token: access_token, scope: scope });
+  res.render("index", { access_token, scope });
 });
 
 app.get("/authorize", function (req, res) {

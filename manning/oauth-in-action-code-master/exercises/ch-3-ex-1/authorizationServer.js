@@ -88,7 +88,7 @@ app.get("/authorize", function (req, res) {
 
     requests[reqid] = req.query;
 
-    res.render("approve", { client: client, reqid: reqid, scope: rscope });
+    res.render("approve", { client, reqid, scope: rscope });
     return;
   }
 });
@@ -111,11 +111,10 @@ app.post("/approve", function (req, res) {
 
       var user = req.body.user;
 
-      var scope = __.filter(__.keys(req.body), function (s) {
-        return __.string.startsWith(s, "scope_");
-      }).map(function (s) {
-        return s.slice("scope_".length);
-      });
+      var scope = Object.keys(req.body)
+        .filter((s) => s.startsWith("scope_"))
+        .map((s) => s.slice("scope_".length));
+      console.log("in server /approve logging scope", scope);
       var client = getClient(query.client_id);
       var cscope = client.scope ? client.scope.split(" ") : undefined;
       if (__.difference(scope, cscope).length > 0) {

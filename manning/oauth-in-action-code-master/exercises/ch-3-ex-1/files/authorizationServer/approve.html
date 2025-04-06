@@ -51,6 +51,10 @@
 		  
 		   <form class="form" action="/approve" method="POST">
 			   <input type="hidden" name="reqid" value="<%- reqid %>">
+			   <div class="form-group">
+			     <label for="user">User ID:</label>
+			     <input type="text" class="form-control" id="user" name="user" value="alice" required>
+			   </div>
 			   <% if (scope) { %>
 			   <p>The client is requesting access to the following:</p>
 			   <ul>
