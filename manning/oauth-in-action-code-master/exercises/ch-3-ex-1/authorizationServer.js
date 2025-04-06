@@ -73,14 +73,12 @@ app.get("/authorize", function (req, res) {
     if (
       rscope &&
       cscope &&
-      rscope.filter((scope) => !cscope.includes(scope)).length > 0
+      rscope.filter((scope) => !cscope.includes(scope)).length > 0 // if the length of the set of request scopes not included in the client scope is greater than 0
     ) {
       // client asked for a scope it couldn't have
-      var urlParsed = url.parse(req.query.redirect_uri);
-      delete urlParsed.search; // this is a weird behavior of the URL library
-      urlParsed.query = urlParsed.query || {};
-      urlParsed.query.error = "invalid_scope";
-      res.redirect(url.format(urlParsed));
+      var urlParsed = new URL(req.query.redirect_uri);
+      urlParsed.searchParams.set("error", "invalid_scope");
+      res.redirect(urlParsed.toString());
       return;
     }
 
@@ -117,13 +115,11 @@ app.post("/approve", function (req, res) {
       console.log("in server /approve logging scope", scope);
       var client = getClient(query.client_id);
       var cscope = client.scope ? client.scope.split(" ") : undefined;
-      if (__.difference(scope, cscope).length > 0) {
+      if (scope.filter((scope) => !cscope.includes(scope)).length > 0) {
         // client asked for a scope it couldn't have
-        var urlParsed = url.parse(query.redirect_uri);
-        delete urlParsed.search; // this is a weird behavior of the URL library
-        urlParsed.query = urlParsed.query || {};
-        urlParsed.query.error = "invalid_scope";
-        res.redirect(url.format(urlParsed));
+        var urlParsed = new URL(query.redirect_uri);
+        urlParsed.searchParams.set("error", "invalid_scope");
+        res.redirect(urlParsed.toString());
         return;
       }
 
@@ -134,29 +130,23 @@ app.post("/approve", function (req, res) {
         user: user,
       };
 
-      var urlParsed = url.parse(query.redirect_uri);
-      delete urlParsed.search; // this is a weird behavior of the URL library
-      urlParsed.query = urlParsed.query || {};
-      urlParsed.query.code = code;
-      urlParsed.query.state = query.state;
-      res.redirect(url.format(urlParsed));
+      var urlParsed = new URL(query.redirect_uri);
+      urlParsed.searchParams.set("code", code);
+      urlParsed.searchParams.set("state", query.state);
+      res.redirect(urlParsed.toString());
       return;
     } else {
       // we got a response type we don't understand
-      var urlParsed = url.parse(query.redirect_uri);
-      delete urlParsed.search; // this is a weird behavior of the URL library
-      urlParsed.query = urlParsed.query || {};
-      urlParsed.query.error = "unsupported_response_type";
-      res.redirect(url.format(urlParsed));
+      var urlParsed = new URL(query.redirect_uri);
+      urlParsed.searchParams.set("error", "unsupported_response_type");
+      res.redirect(urlParsed.toString());
       return;
     }
   } else {
     // user denied access
-    var urlParsed = url.parse(query.redirect_uri);
-    delete urlParsed.search; // this is a weird behavior of the URL library
-    urlParsed.query = urlParsed.query || {};
-    urlParsed.query.error = "access_denied";
-    res.redirect(url.format(urlParsed));
+    var urlParsed = new URL(query.redirect_uri);
+    urlParsed.searchParams.set("error", "access_denied");
+    res.redirect(urlParsed.toString());
     return;
   }
 });
