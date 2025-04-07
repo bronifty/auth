@@ -29,5 +29,24 @@ chrome://inspect
 
 2. server /authorize
 
+- filter for matching client_id, redirect_uri, scopes
 - save query in requests[reqid]
-- render approve form with client (whole object including creds, redirect, and scope), scope, and reqid
+
+```json
+// requests object
+{
+  "nrOdghFy": {
+    "response_type": "code",
+    "client_id": "oauth-client-1",
+    "redirect_uri": "http://localhost:9000/callback",
+    "state": "gHddFXaImCl0ao6IGd1mktiDPTeY4hW4"
+  }
+}
+```
+
+- render approve form with client, scope, and reqid
+- user POSTS form to /approve endpoint
+
+3. server /approve
+
+-
