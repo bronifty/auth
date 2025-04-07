@@ -130,6 +130,7 @@ app.post("/approve", function (req, res) {
         scope: scope,
         user: user,
       };
+      console.log("codes!!!!!!!!!!!!!!!!!!!!!!!", codes);
 
       var urlParsed = new URL(query.redirect_uri);
       urlParsed.searchParams.set("code", code);

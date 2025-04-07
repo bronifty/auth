@@ -31,6 +31,7 @@ chrome://inspect
 
 - filter for matching client_id, redirect_uri, scopes
 - save query in requests[reqid]
+- now global state looks like this:
 
 ```js
 /*** current global state on auth server ***/
@@ -76,8 +77,52 @@ var query = {
 
 - now we have retrieved the query from the client and passed it through a user (resource owner) authorization endpoint, so we can remove the original request object and upgrade it into a code object where it will be subsequently upgraded to a token
 - all these objects are single use but the token is reusable (basically an auto-generated api key)
+
   - the flow is:
     1. query (from client /authorize)
     2. request (from server /authorize)
     3. code (from server /approve)
     4. token (from server /token)
+
+- grab code, user and scope from POST request to /approve and place it with the query into the codes object
+
+```js
+var code = randomstring.generate(8);
+codes[code] = {
+  authorizationEndpointRequest: query,
+  scope: scope,
+  user: user,
+};
+```
+
+- now global state looks like this:
+
+```js
+/*** current global state on auth server ***/
+var clients = [
+  {
+    client_id: "oauth-client-1",
+    client_secret: "oauth-client-secret-1",
+    redirect_uris: ["http://localhost:9000/callback"],
+    scope: "foo bar",
+  },
+];
+
+// requests object
+var requests = {};
+
+var codes = {
+  uFNJaywz: {
+    authorizationEndpointRequest: {
+      response_type: "code",
+      client_id: "oauth-client-1",
+      redirect_uri: "http://localhost:9000/callback",
+      state: "W1mAIHTZU9FnCiEDDlI2Qs8YZlGVltWz",
+    },
+    scope: [],
+    user: "alice",
+  },
+};
+
+/*** end global state ***/
+```
