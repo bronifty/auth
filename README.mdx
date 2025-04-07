@@ -178,19 +178,53 @@ var scope = null;
 - POST to auth server /token endpoint with code, client creds, and redirect_uri
 
 ```js
-var form_data = qs.stringify({
+var code = req.query.code;
+
+var form_data = new URLSearchParams({
   grant_type: "authorization_code",
   code,
   redirect_uri: client.redirect_uris[0],
-});
+}).toString();
 var headers = {
   "Content-Type": "application/x-www-form-urlencoded",
   Authorization:
     "Basic " + encodeClientCredentials(client.client_id, client.client_secret),
 };
-const response = await fetch(authServer.tokenEndpoint, {
-  method: "POST",
-  headers,
-  body: form_data,
-});
+
+var tokRes = (async function () {
+  const response = await fetch(authServer.tokenEndpoint, {
+    method: "POST",
+    headers,
+    body: form_data,
+  });
+
+  // Convert fetch Response to match sync-request format
+  return {
+    statusCode: response.status,
+    getBody: async () => {
+      // const body = await response.json();
+      // return JSON.stringify(body);
+      return JSON.stringify(await response.json());
+    },
+  };
+})();
+
+console.log("Requesting access token for code %s", code);
+
+// Handle the Promise
+async function fetchResource() {
+  const response = await tokRes;
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    const body = JSON.parse(await response.getBody());
+    access_token = body.access_token;
+    console.log("Got access token: %s", access_token);
+    res.render("index", { access_token: access_token, scope: scope });
+  } else {
+    res.render("error", {
+      error:
+        "Unable to fetch access token, server response: " + response.statusCode,
+    });
+  }
+}
+fetchResource();
 ```

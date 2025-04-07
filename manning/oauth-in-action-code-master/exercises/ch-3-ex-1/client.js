@@ -83,11 +83,11 @@ app.get("/callback", function (req, res) {
 
   var code = req.query.code;
 
-  var form_data = qs.stringify({
+  var form_data = new URLSearchParams({
     grant_type: "authorization_code",
     code,
     redirect_uri: client.redirect_uris[0],
-  });
+  }).toString();
   var headers = {
     "Content-Type": "application/x-www-form-urlencoded",
     Authorization:
@@ -116,27 +116,44 @@ app.get("/callback", function (req, res) {
   console.log("Requesting access token for code %s", code);
 
   // Handle the Promise
-  tokRes
-    .then(async function (response) {
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        const body = JSON.parse(await response.getBody());
-        access_token = body.access_token;
-        console.log("Got access token: %s", access_token);
-        res.render("index", { access_token: access_token, scope: scope });
-      } else {
-        res.render("error", {
-          error:
-            "Unable to fetch access token, server response: " +
-            response.statusCode,
-        });
-      }
-    })
-    .catch(function (error) {
+  async function fetchResource() {
+    const response = await tokRes;
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      const body = JSON.parse(await response.getBody());
+      access_token = body.access_token;
+      console.log("Got access token: %s", access_token);
+      res.render("index", { access_token: access_token, scope: scope });
+    } else {
       res.render("error", {
-        error: "Error fetching access token: " + error.message,
+        error:
+          "Unable to fetch access token, server response: " +
+          response.statusCode,
       });
-    });
+    }
+  }
+  fetchResource();
 });
+//   tokRes
+//     .then(async function (response) {
+//       if (response.statusCode >= 200 && response.statusCode < 300) {
+//         const body = JSON.parse(await response.getBody());
+//         access_token = body.access_token;
+//         console.log("Got access token: %s", access_token);
+//         res.render("index", { access_token: access_token, scope: scope });
+//       } else {
+//         res.render("error", {
+//           error:
+//             "Unable to fetch access token, server response: " +
+//             response.statusCode,
+//         });
+//       }
+//     })
+//     .catch(function (error) {
+//       res.render("error", {
+//         error: "Error fetching access token: " + error.message,
+//       });
+//     });
+// });
 
 app.get("/fetch_resource", function (req, res) {
   /*
@@ -186,8 +203,7 @@ app.get("/fetch_resource", function (req, res) {
     } else {
       res.render("error", {
         error:
-          "Unable to fetch access token, server response: " +
-          response.statusCode,
+          "Unable to fetch resource, server response: " + response.statusCode,
       });
     }
   }
