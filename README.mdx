@@ -33,7 +33,7 @@ chrome://inspect
 - save query in requests[reqid]
 
 ```js
-/*** global state on auth server ***/
+/*** current global state on auth server ***/
 var clients = [
   {
     client_id: "oauth-client-1",
@@ -59,8 +59,24 @@ var codes = {};
 ```
 
 - render approve form with client, scope, and reqid
-- user POSTS form to /approve endpoint
+- user POSTS form to /approve endpoint with user, reqid, and scope
 
-3. server /approve
+3. server POST /approve
 
--
+- use reqid from POST request to pull that query object out from the previously saved requests object and in this implementation we are referring to it as query, which matches the original query parameters object from the client's /authorize request
+
+```js
+var query = {
+    response_type: "code",
+    client_id: "oauth-client-1",
+    redirect_uri: "http://localhost:9000/callback",
+    state: "gHddFXaImCl0ao6IGd1mktiDPTeY4hW4",
+  },
+```
+
+- now we have retrieved the query from the client and passed it through a user (resource owner) authorization endpoint, so we can remove the original request object and upgrade it into a code object where it will be subsequently upgraded to a token
+  - the flow is:
+    1. query (from client /authorize)
+    2. request (from server /authorize)
+    3. code (from server /approve)
+    4. token (from server /token)
