@@ -160,7 +160,7 @@ console.log(
 
 4. client GET /callback
 
-- now client global state looks like this:
+- now client global state looks like this (no update):
 
 ```js
 var client = {
@@ -171,4 +171,26 @@ var client = {
 var state = "ameYD3YRqgEFkmfeQe9FRyIfdDcDuXKP";
 var access_token = null;
 var scope = null;
+```
+
+- filter for matching state between request params and global client state
+- grab code from request params
+- POST to auth server /token endpoint with code, client creds, and redirect_uri
+
+```js
+var form_data = qs.stringify({
+  grant_type: "authorization_code",
+  code,
+  redirect_uri: client.redirect_uris[0],
+});
+var headers = {
+  "Content-Type": "application/x-www-form-urlencoded",
+  Authorization:
+    "Basic " + encodeClientCredentials(client.client_id, client.client_secret),
+};
+const response = await fetch(authServer.tokenEndpoint, {
+  method: "POST",
+  headers,
+  body: form_data,
+});
 ```
