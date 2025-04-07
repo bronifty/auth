@@ -23,11 +23,11 @@ chrome://inspect
 
 ## OAuth Flow State Management (code and token)
 
-1. client /authorize
+1. client GET /authorize
 
 - redirect to server /authorize with query:{state, client_id, redirect_uri, response_type: "code"}
 
-2. server /authorize
+2. server GET /authorize
 
 - filter for matching client_id, redirect_uri, scopes
 - save query in requests[reqid]
