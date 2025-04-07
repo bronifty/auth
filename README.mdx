@@ -20,3 +20,14 @@
 node --inspect authorizationServer.js
 chrome://inspect
 ```
+
+## OAuth Flow State Management (code and token)
+
+1. client /authorize
+
+- redirect to server /authorize with query:{state, client_id, redirect_uri, response_type: "code"}
+
+2. server /authorize
+
+- save query in requests[reqid]
+- render approve form with client (whole object including creds, redirect, and scope), scope, and reqid

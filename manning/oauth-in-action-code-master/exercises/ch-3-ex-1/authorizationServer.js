@@ -86,7 +86,7 @@ app.get("/authorize", function (req, res) {
 
     requests[reqid] = req.query;
 
-    res.render("approve", { client, reqid, scope: rscope });
+    res.render("approve", { client: client.client_id, reqid, scope: rscope });
     return;
   }
 });
