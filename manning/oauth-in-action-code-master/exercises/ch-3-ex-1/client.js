@@ -142,6 +142,11 @@ app.get("/fetch_resource", function (req, res) {
   /*
    * Use the access token to call the resource server
    */
+  if (!access_token) {
+    res.render("error", { error: "Missing Access Token" });
+    return;
+  }
+  console.log("Making request with access token %s", access_token);
 
   // var form_data = qs.stringify({
   //   grant_type: "authorization_code",
@@ -149,15 +154,13 @@ app.get("/fetch_resource", function (req, res) {
   //   redirect_uri: client.redirect_uris[0],
   // });
   var headers = {
-    "content-type": "application/x-www-form-urlencoded",
-    Authorization: "Bearer " + access_token,
+    authorization: `bearer ${access_token}`,
   };
 
   var tokRes = (async function () {
     const response = await fetch(protectedResource, {
-      method: "POST",
+      method: "post",
       headers,
-      body: JSON.stringify({}),
     });
 
     // Convert fetch Response to match sync-request format
@@ -174,25 +177,21 @@ app.get("/fetch_resource", function (req, res) {
   // console.log("Requesting access token for code %s", code);
 
   // Handle the Promise
-  tokRes
-    .then(async function (response) {
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        const body = JSON.parse(await response.getBody());
-        console.log("Got data: %s", body);
-        res.render("data", { resource: body });
-      } else {
-        res.render("error", {
-          error:
-            "Unable to fetch access token, server response: " +
-            response.statusCode,
-        });
-      }
-    })
-    .catch(function (error) {
+  async function fetchResource() {
+    const response = await tokRes;
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      const body = JSON.parse(await response.getBody());
+      console.log("Got data: %s!!!!!!!!", body);
+      res.render("data", { resource: body });
+    } else {
       res.render("error", {
-        error: "Error fetching access token: " + error.message,
+        error:
+          "Unable to fetch access token, server response: " +
+          response.statusCode,
       });
-    });
+    }
+  }
+  fetchResource();
 });
 
 var buildUrl = function (base, options, hash) {
