@@ -75,6 +75,7 @@ var query = {
 ```
 
 - now we have retrieved the query from the client and passed it through a user (resource owner) authorization endpoint, so we can remove the original request object and upgrade it into a code object where it will be subsequently upgraded to a token
+- all these objects are single use but the token is reusable (basically an auto-generated api key)
   - the flow is:
     1. query (from client /authorize)
     2. request (from server /authorize)
