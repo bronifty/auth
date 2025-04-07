@@ -130,12 +130,15 @@ app.post("/approve", function (req, res) {
         scope: scope,
         user: user,
       };
-      console.log("codes!!!!!!!!!!!!!!!!!!!!!!!", codes);
 
       var urlParsed = new URL(query.redirect_uri);
       urlParsed.searchParams.set("code", code);
       urlParsed.searchParams.set("state", query.state);
       res.redirect(urlParsed.toString());
+      console.log(
+        "in POST /approve; urlParsed.toString()!!!! ",
+        urlParsed.toString()
+      );
       return;
     } else {
       // we got a response type we don't understand

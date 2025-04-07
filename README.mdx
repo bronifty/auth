@@ -84,9 +84,13 @@ var query = {
     3. code (from server /approve)
     4. token (from server /token)
 
-- grab code, user and scope from POST request to /approve and place it with the query into the codes object
+- delete requests[reqid]
+- create code
+- grab user and scope from POST request to /approve
+- insert code, user and scope with the query into the codes object
 
 ```js
+delete requests[reqid];
 var code = randomstring.generate(8);
 codes[code] = {
   authorizationEndpointRequest: query,
@@ -126,3 +130,19 @@ var codes = {
 
 /*** end global state ***/
 ```
+
+- redirect user to client's redirect_uri with code and state as query params
+
+```js
+var urlParsed = new URL(query.redirect_uri);
+urlParsed.searchParams.set("code", code);
+urlParsed.searchParams.set("state", query.state);
+res.redirect(urlParsed.toString());
+console.log(
+  "in POST /approve; urlParsed.toString()!!!! ",
+  urlParsed.toString()
+);
+//in POST /approve; urlParsed.toString()!!!!  http://localhost:9000/callback?code=bYbIsgap&state=jSSaUrbcHRXL828jJYquktUNTrk6vM7g
+```
+
+4. client GET /callback
