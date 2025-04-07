@@ -25,13 +25,26 @@ chrome://inspect
 
 1. client GET /authorize
 
+- create state
 - redirect to server /authorize with query:{state, client_id, redirect_uri, response_type: "code"}
+- now client global state looks like this:
+
+```js
+var client = {
+  client_id: "oauth-client-1",
+  client_secret: "oauth-client-secret-1",
+  redirect_uris: ["http://localhost:9000/callback"],
+};
+var state = "ameYD3YRqgEFkmfeQe9FRyIfdDcDuXKP";
+var access_token = null;
+var scope = null;
+```
 
 2. server GET /authorize
 
 - filter for matching client_id, redirect_uri, scopes
 - save query in requests[reqid]
-- now global state looks like this:
+- now auth server global state looks like this:
 
 ```js
 /*** current global state on auth server ***/
@@ -99,7 +112,7 @@ codes[code] = {
 };
 ```
 
-- now global state looks like this:
+- now auth server global state looks like this:
 
 ```js
 /*** current global state on auth server ***/
@@ -116,12 +129,12 @@ var clients = [
 var requests = {};
 
 var codes = {
-  uFNJaywz: {
+  1ls3aXXd: {
     authorizationEndpointRequest: {
       response_type: "code",
       client_id: "oauth-client-1",
       redirect_uri: "http://localhost:9000/callback",
-      state: "W1mAIHTZU9FnCiEDDlI2Qs8YZlGVltWz",
+      state: "ameYD3YRqgEFkmfeQe9FRyIfdDcDuXKP",
     },
     scope: [],
     user: "alice",
@@ -142,7 +155,20 @@ console.log(
   "in POST /approve; urlParsed.toString()!!!! ",
   urlParsed.toString()
 );
-//in POST /approve; urlParsed.toString()!!!!  http://localhost:9000/callback?code=bYbIsgap&state=jSSaUrbcHRXL828jJYquktUNTrk6vM7g
+//in POST /approve; urlParsed.toString()!!!!  http://localhost:9000/callback?code=1ls3aXXd&state=ameYD3YRqgEFkmfeQe9FRyIfdDcDuXKP
 ```
 
 4. client GET /callback
+
+- now client global state looks like this:
+
+```js
+var client = {
+  client_id: "oauth-client-1",
+  client_secret: "oauth-client-secret-1",
+  redirect_uris: ["http://localhost:9000/callback"],
+};
+var state = "ameYD3YRqgEFkmfeQe9FRyIfdDcDuXKP";
+var access_token = null;
+var scope = null;
+```
