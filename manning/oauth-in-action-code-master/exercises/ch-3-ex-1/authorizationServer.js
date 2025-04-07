@@ -24,7 +24,7 @@ var authServer = {
   tokenEndpoint: "http://localhost:9001/token",
 };
 
-// client information
+/*** global state ***/
 var clients = [
   {
     client_id: "oauth-client-1",
@@ -37,6 +37,7 @@ var clients = [
 var codes = {};
 
 var requests = {};
+/*** end global state ***/
 
 var getClient = function (clientId) {
   let foundClient = null;

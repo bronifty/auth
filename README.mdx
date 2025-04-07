@@ -32,16 +32,30 @@ chrome://inspect
 - filter for matching client_id, redirect_uri, scopes
 - save query in requests[reqid]
 
-```json
+```js
+/*** global state on auth server ***/
+var clients = [
+  {
+    client_id: "oauth-client-1",
+    client_secret: "oauth-client-secret-1",
+    redirect_uris: ["http://localhost:9000/callback"],
+    scope: "foo bar",
+  },
+];
+
 // requests object
-{
-  "nrOdghFy": {
-    "response_type": "code",
-    "client_id": "oauth-client-1",
-    "redirect_uri": "http://localhost:9000/callback",
-    "state": "gHddFXaImCl0ao6IGd1mktiDPTeY4hW4"
-  }
-}
+var requests = {
+  nrOdghFy: {
+    response_type: "code",
+    client_id: "oauth-client-1",
+    redirect_uri: "http://localhost:9000/callback",
+    state: "gHddFXaImCl0ao6IGd1mktiDPTeY4hW4",
+  },
+};
+
+var codes = {};
+
+/*** end global state ***/
 ```
 
 - render approve form with client, scope, and reqid
