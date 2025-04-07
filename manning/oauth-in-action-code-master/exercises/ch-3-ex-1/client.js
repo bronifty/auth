@@ -20,6 +20,8 @@ var authServer = {
   tokenEndpoint: "http://localhost:9001/token",
 };
 
+var protectedResource = "http://localhost:9002/resource";
+
 // client information
 
 /*
@@ -140,6 +142,57 @@ app.get("/fetch_resource", function (req, res) {
   /*
    * Use the access token to call the resource server
    */
+
+  // var form_data = qs.stringify({
+  //   grant_type: "authorization_code",
+  //   code: code,
+  //   redirect_uri: client.redirect_uris[0],
+  // });
+  var headers = {
+    "content-type": "application/x-www-form-urlencoded",
+    Authorization: "Bearer " + access_token,
+  };
+
+  var tokRes = (async function () {
+    const response = await fetch(protectedResource, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({}),
+    });
+
+    // Convert fetch Response to match sync-request format
+    return {
+      statusCode: response.status,
+      getBody: async () => {
+        // const body = await response.json();
+        // return JSON.stringify(body);
+        return JSON.stringify(await response.json());
+      },
+    };
+  })();
+
+  // console.log("Requesting access token for code %s", code);
+
+  // Handle the Promise
+  tokRes
+    .then(async function (response) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        const body = JSON.parse(await response.getBody());
+        console.log("Got data: %s", body);
+        res.render("data", { resource: body });
+      } else {
+        res.render("error", {
+          error:
+            "Unable to fetch access token, server response: " +
+            response.statusCode,
+        });
+      }
+    })
+    .catch(function (error) {
+      res.render("error", {
+        error: "Error fetching access token: " + error.message,
+      });
+    });
 });
 
 var buildUrl = function (base, options, hash) {
