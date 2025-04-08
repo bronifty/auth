@@ -291,3 +291,41 @@ var token_response = {
 
 res.status(200).json(token_response);
 ```
+
+6. client POST /fetch_resource
+
+- use saved token to hit api
+
+```js
+var headers = {
+  authorization: `bearer ${access_token}`,
+};
+
+var tokRes = (async function () {
+  const response = await fetch(protectedResource, {
+    method: "post",
+    headers,
+  });
+  return {
+    statusCode: response.status,
+    getBody: async () => {
+      return JSON.stringify(await response.json());
+    },
+  };
+})();
+
+async function fetchResource() {
+  const response = await tokRes;
+  if (response.statusCode >= 200 && response.statusCode < 300) {
+    const body = JSON.parse(await response.getBody());
+    console.log("Got data: %s!!!!!!!!", body);
+    res.render("data", { resource: body });
+  } else {
+    res.render("error", {
+      error:
+        "Unable to fetch resource, server response: " + response.statusCode,
+    });
+  }
+}
+fetchResource();
+```

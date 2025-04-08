@@ -165,11 +165,6 @@ app.get("/fetch_resource", function (req, res) {
   }
   console.log("Making request with access token %s", access_token);
 
-  // var form_data = qs.stringify({
-  //   grant_type: "authorization_code",
-  //   code: code,
-  //   redirect_uri: client.redirect_uris[0],
-  // });
   var headers = {
     authorization: `bearer ${access_token}`,
   };
@@ -179,21 +174,14 @@ app.get("/fetch_resource", function (req, res) {
       method: "post",
       headers,
     });
-
-    // Convert fetch Response to match sync-request format
     return {
       statusCode: response.status,
       getBody: async () => {
-        // const body = await response.json();
-        // return JSON.stringify(body);
         return JSON.stringify(await response.json());
       },
     };
   })();
 
-  // console.log("Requesting access token for code %s", code);
-
-  // Handle the Promise
   async function fetchResource() {
     const response = await tokRes;
     if (response.statusCode >= 200 && response.statusCode < 300) {
