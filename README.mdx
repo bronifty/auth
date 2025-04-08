@@ -244,3 +244,50 @@ var scope = null;
 ```
 
 5. server POST /token
+
+- check auth in request against client creds in global state on auth server
+- filter for grant_type: "authorization_code"
+- pull code from codes object based on matching it with the code in the request
+- save code object and delete code from codes object
+- filter for matching client_id from request against client_id in the code object
+- create access_token
+- insert that into the database
+
+- now auth server global state looks like this:
+
+```js
+/*** current global state on auth server ***/
+var clients = [
+  {
+    client_id: "oauth-client-1",
+    client_secret: "oauth-client-secret-1",
+    redirect_uris: ["http://localhost:9000/callback"],
+    scope: "foo bar",
+  },
+];
+
+// requests object
+var requests = {};
+
+var codes = {};
+
+nosql.insert({
+  access_token: access_token,
+  client_id: clientId,
+  scope,
+});
+
+/*** end global state ***/
+```
+
+- send token response to client
+
+```js
+var token_response = {
+  access_token: access_token,
+  token_type: "Bearer",
+  scope: cscope,
+};
+
+res.status(200).json(token_response);
+```
