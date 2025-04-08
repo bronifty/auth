@@ -176,6 +176,7 @@ var scope = null;
 - filter for matching state between request params and global client state
 - grab code from request params
 - POST to auth server /token endpoint with code, client creds, and redirect_uri
+- save access_token to client global state
 
 ```js
 var code = req.query.code;
@@ -228,3 +229,18 @@ async function fetchResource() {
 }
 fetchResource();
 ```
+
+- now client global state looks like this:
+
+```js
+var client = {
+  client_id: "oauth-client-1",
+  client_secret: "oauth-client-secret-1",
+  redirect_uris: ["http://localhost:9000/callback"],
+};
+var state = "ameYD3YRqgEFkmfeQe9FRyIfdDcDuXKP";
+var access_token = uzXXRt0y9meUdNchv6B1LeIsTw63fKlv;
+var scope = null;
+```
+
+5. server POST /token
