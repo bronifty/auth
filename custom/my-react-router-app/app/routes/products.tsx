@@ -1,23 +1,33 @@
 // route("products/:pid", "./product.tsx");
 import type { Route } from "./+types/product";
+import { useFetcher, useLoaderData } from "react-router";
+import { useEffect } from "react";
 
-export async function loader({ params, request }: Route.LoaderArgs) {
-  //   const product = {
-  //     name: "Product 1",
-  //     description: "Product 1 description",
-  //   };
-  // Create a URL relative to the current request
-  const url = new URL("/resource", request.url);
-  const product = await fetch(url).then((res) => res.json());
-  return product;
+export async function loader({ params }: Route.LoaderArgs) {
+  // Initialize with default data
+  return {
+    name: "Loading...",
+    description: "Loading description...",
+  };
 }
 
 export default function Product({ loaderData }: Route.ComponentProps) {
-  const { name, description } = loaderData;
+  const initialData = useLoaderData();
+  const fetcher = useFetcher();
+
+  // Fetch data from resource route when component mounts
+  useEffect(() => {
+    fetcher.load("/resource");
+  }, []);
+
+  // Use fetcher data if available, otherwise use loader data
+  const { name, description } = fetcher.data || initialData;
+
   return (
     <div>
       <h1>{name}</h1>
       <p>{description}</p>
+      {fetcher.state !== "idle" && <p>Loading...</p>}
     </div>
   );
 }

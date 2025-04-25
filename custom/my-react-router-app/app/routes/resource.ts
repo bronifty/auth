@@ -2,8 +2,8 @@ import type { Route } from "./+types/resource";
 
 export function loader(_: Route.LoaderArgs) {
   return Response.json({
-    name: "Product 2",
-    description: "Product 2 description",
+    name: "Product 3",
+    description: "Product 3 description",
   });
 }
 
