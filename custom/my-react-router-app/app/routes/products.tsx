@@ -1,30 +1,14 @@
 // route("products/:pid", "./product.tsx");
-import type { Route } from "./+types/product";
-import { useFetcher, useLoaderData } from "react-router";
-import { useEffect } from "react";
+import { useFetcher } from "react-router";
 
-export async function loader({ params }: Route.LoaderArgs) {
-  // Initialize with default data
-  return {
-    name: "Loading...",
-    description: "Loading description...",
-  };
-}
-
-export default function Product({ loaderData }: Route.ComponentProps) {
-  const initialData = useLoaderData();
+export default function Product() {
   const getFetcher = useFetcher();
   const postFetcher = useFetcher();
 
-  // Function to handle GET request
-  const handleGetRequest = () => {
-    getFetcher.load("/resource");
-  };
-
-  //   // Load data on mount
-  //   useEffect(() => {
-  //     handleGetRequest();
-  //   }, []);
+  //   // Function to handle GET request
+  //   function handleGetRequest() {
+  //     getFetcher.load("/resource");
+  //   }
 
   return (
     <div>
@@ -41,7 +25,9 @@ export default function Product({ loaderData }: Route.ComponentProps) {
       >
         <h2>GET Request</h2>
         <button
-          onClick={handleGetRequest}
+          onClick={function () {
+            getFetcher.load("/resource");
+          }}
           style={{
             padding: "8px 16px",
             background: "#4CAF50",

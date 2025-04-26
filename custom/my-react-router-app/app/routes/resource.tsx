@@ -1,5 +1,6 @@
-// Resource route that returns JSON data
-export async function loader() {
+import type { Route } from "./+types/resource";
+
+export async function loader(_: Route.LoaderArgs) {
   // Example product data for GET requests
   const product = {
     name: "Product from Resource Route (GET)",
@@ -10,7 +11,7 @@ export async function loader() {
 }
 
 // Handle POST requests
-export async function action({ request }) {
+export async function action({ request }: Route.ActionArgs) {
   // Get form data from the request
   const formData = await request.formData();
 
