@@ -18,10 +18,10 @@ importers:
         specifier: ^5.1.17
         version: 5.1.26
       react:
-        specifier: ^19.0.0
+        specifier: ^19.1.0
         version: 19.1.0
       react-dom:
-        specifier: ^19.0.0
+        specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
       react-router:
         specifier: ^7.5.1
@@ -37,10 +37,10 @@ importers:
         specifier: ^20
         version: 20.17.30
       '@types/react':
-        specifier: ^19.0.1
+        specifier: ^19.1.0
         version: 19.1.2
       '@types/react-dom':
-        specifier: ^19.0.1
+        specifier: ^19.1.0
         version: 19.1.2(@types/react@19.1.2)
       react-router-devtools:
         specifier: ^1.1.0
