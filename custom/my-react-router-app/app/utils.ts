@@ -27,4 +27,14 @@ const encodeClientCredentials = function (
   ).toString("base64");
 };
 
-export { buildUrl, encodeClientCredentials };
+const getClient = function (clientId: string, clients: any) {
+  let foundClient = null;
+  clients.forEach(function (client: any) {
+    if (client.client_id == clientId) {
+      foundClient = client;
+    }
+  });
+  return foundClient;
+};
+
+export { buildUrl, encodeClientCredentials, getClient };

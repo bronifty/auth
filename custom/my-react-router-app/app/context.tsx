@@ -23,7 +23,7 @@ interface Endpoints {
 }
 
 const endpoints: Endpoints = {
-  authorizationEndpoint: "http://localhost:9001/authorize",
+  authorizationEndpoint: "server/authorize",
   tokenEndpoint: "http://localhost:9001/token",
   protectedResource: "http://localhost:9002/resource",
 };
