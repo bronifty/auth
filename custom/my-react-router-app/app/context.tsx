@@ -24,9 +24,32 @@ const endpoints: Endpoints = {
   protectedResource: "http://localhost:9002/resource",
 };
 
+interface Requests {
+  [key: string]: {
+    response_type: string;
+    client_id: string;
+    redirect_uri: string;
+    state: string;
+  };
+}
+
+const requests: Requests = {};
+
+interface Codes {
+  [key: string]: {
+    authorizationEndpointRequest: Requests;
+    scope: string[];
+    user: string;
+  };
+}
+
+const codes: Codes = {};
+
 interface OAuthContextType {
   client: Client;
   endpoints: Endpoints;
+  requests: Requests;
+  codes: Codes;
 }
 
 const OAuthContext = createContext<OAuthContextType | undefined>(undefined);
@@ -35,6 +58,7 @@ export function OAuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     client,
     endpoints,
+    requests,
   };
   return <OAuthContext value={value}>{children}</OAuthContext>;
 }
