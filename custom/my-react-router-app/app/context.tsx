@@ -70,6 +70,8 @@ export function OAuthProvider({ children }: { children: React.ReactNode }) {
     client,
     endpoints,
     requests,
+    codes,
+    tokens,
   };
   return <OAuthContext value={value}>{children}</OAuthContext>;
 }
