@@ -7,12 +7,14 @@ interface Client {
   scope: string;
 }
 
-const client: Client = {
-  client_id: "oauth-client-1",
-  client_secret: "oauth-client-secret-1",
-  redirect_uris: ["http://localhost:9000/callback"],
-  scope: "foo bar",
-};
+const clients: Client[] = [
+  {
+    client_id: "oauth-client-1",
+    client_secret: "oauth-client-secret-1",
+    redirect_uris: ["http://localhost:9000/callback"],
+    scope: "foo bar",
+  },
+];
 
 interface Endpoints {
   authorizationEndpoint: string;
@@ -58,7 +60,7 @@ interface Tokens {
 const tokens: Tokens = {};
 
 interface OAuthContextType {
-  client: Client;
+  clients: Client[];
   endpoints: Endpoints;
   requests: Requests;
   codes: Codes;
@@ -69,7 +71,7 @@ const OAuthContext = createContext<OAuthContextType | undefined>(undefined);
 
 export function OAuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
-    client,
+    clients,
     endpoints,
     requests,
     codes,

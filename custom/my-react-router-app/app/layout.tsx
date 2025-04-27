@@ -4,7 +4,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { useOAuth } from "./context";
 export default function Layout() {
-  const { client, endpoints, requests, codes, tokens } = useOAuth();
+  const { clients, endpoints, requests, codes, tokens } = useOAuth();
   return (
     <>
       <header>
@@ -14,7 +14,7 @@ export default function Layout() {
       <footer>
         <hr />
         <p>
-          client: {JSON.stringify(client, null, 2)}
+          clients: {JSON.stringify(clients, null, 2)}
           <br />
           endpoints: {JSON.stringify(endpoints, null, 2)}
           <br />
