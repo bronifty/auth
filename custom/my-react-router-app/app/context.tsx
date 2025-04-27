@@ -32,4 +32,17 @@ interface OAuthContextType {
 const OAuthContext = createContext<OAuthContextType | undefined>(undefined);
 
 export function OAuthProvider({ children }: { children: React.ReactNode }) {
-    
+  const value = {
+    client,
+    endpoints,
+  };
+  return <OAuthContext value={value}>{children}</OAuthContext>;
+}
+
+export function useOAuth() {
+  const context = useContext(OAuthContext);
+  if (!context) {
+    throw new Error("useOAuth must be used within an OAuthProvider");
+  }
+  return context;
+}
