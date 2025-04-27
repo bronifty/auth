@@ -45,11 +45,22 @@ interface Codes {
 
 const codes: Codes = {};
 
+interface Tokens {
+  [key: string]: {
+    access_token: string;
+    client_id: string;
+    scope: string;
+  };
+}
+
+const tokens: Tokens = {};
+
 interface OAuthContextType {
   client: Client;
   endpoints: Endpoints;
   requests: Requests;
   codes: Codes;
+  tokens: Tokens;
 }
 
 const OAuthContext = createContext<OAuthContextType | undefined>(undefined);
