@@ -4,6 +4,15 @@ import querystring from "querystring";
 import { useOAuth } from "../../../context";
 import { buildUrl } from "../../../utils";
 
+const getClient = function (clientId: string, clients: any) {
+  let foundClient = null;
+  clients.forEach(function (client: any) {
+    if (client.client_id == clientId) {
+      foundClient = client;
+    }
+  });
+  return foundClient;
+};
 export async function loader(_: Route.LoaderArgs) {
   const { client, endpoints, requests, codes, tokens } = useOAuth();
 

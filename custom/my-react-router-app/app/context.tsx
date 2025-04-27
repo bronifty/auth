@@ -4,12 +4,14 @@ interface Client {
   client_id: string;
   client_secret: string;
   redirect_uris: string[];
+  scope: string;
 }
 
 const client: Client = {
   client_id: "oauth-client-1",
   client_secret: "oauth-client-secret-1",
   redirect_uris: ["http://localhost:9000/callback"],
+  scope: "foo bar",
 };
 
 interface Endpoints {

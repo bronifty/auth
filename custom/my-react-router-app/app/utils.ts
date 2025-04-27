@@ -1,3 +1,5 @@
+import querystring from "querystring";
+
 const buildUrl = function (
   base: string,
   options: Record<string, string>,
