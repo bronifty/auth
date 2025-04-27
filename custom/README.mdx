@@ -342,3 +342,21 @@ fetchResource();
 
 - in steps 1-5, client sends resource owner to server to authorize and get a code
 - in steps 6-7, client uses code and its own creds to get a token and use it to hit the api's protected resource endpoint
+
+## Custom React Router OAuth Components List
+
+- client page
+- cient authorize function
+- server authorize page
+- server approve function
+- client callback function
+- server token function
+
+- pages:
+  - client (homepage)
+  - server (user approve form)
+- functions:
+  - client authorize (build redirect url with query params)
+  - server approve (create code)
+  - client callback (exchange code for token)
+  - server token (create token)
