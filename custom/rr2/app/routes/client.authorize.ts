@@ -1,8 +1,8 @@
-import type { Route } from "./+types/routes/resource/client/authorize";
-import randomstring from "randomstring";
-import { redirect, useNavigate } from "react-router";
-import { getOAuthState, addRequest } from "../../../store/oauth";
-import { buildUrl } from "../../../utils";
+import type { Route } from "./+types/routes/client.authorize";
+
+import { redirect } from "react-router";
+// import { getOAuthState, addRequest } from "../../../store/oauth";
+// import { buildUrl } from "../../../utils";
 
 export async function loader(_: Route.LoaderArgs) {
   // // Get the current state from XState
@@ -20,6 +20,5 @@ export async function loader(_: Route.LoaderArgs) {
   // const authorizeUrl = buildUrl(endpoints.authorizationEndpoint, request);
   // console.log("redirect", authorizeUrl);
   // return redirect(authorizeUrl);
-  const navigate = useNavigate();
-  navigate("server/authorize");
+  return redirect("/server/authorize");
 }
