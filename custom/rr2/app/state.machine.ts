@@ -5,7 +5,9 @@ type ToggleContext = {
   maxCount: number;
 };
 
-type ToggleEvents = { type: "toggle" };
+type ToggleEvents =
+  | { type: "toggle" }
+  | { type: "SYNC"; data: { value: string; count: number; maxCount: number } };
 
 export const toggleMachine = createMachine({
   id: "toggle",
@@ -22,13 +24,27 @@ export const toggleMachine = createMachine({
           guard: ({ context }) => context.count < context.maxCount,
           target: "Active",
         },
+        SYNC: {
+          actions: assign({
+            count: (_, event) => event.data.count,
+            maxCount: (_, event) => event.data.maxCount,
+          }),
+        },
       },
     },
     Active: {
       entry: assign({
         count: ({ context }) => context.count + 1,
       }),
-      on: { toggle: "Inactive" },
+      on: {
+        toggle: "Inactive",
+        SYNC: {
+          actions: assign({
+            count: (_, event) => event.data.count,
+            maxCount: (_, event) => event.data.maxCount,
+          }),
+        },
+      },
       after: { 2000: "Inactive" },
     },
   },
