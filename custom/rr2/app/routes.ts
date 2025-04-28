@@ -11,5 +11,6 @@ export default [
     route("client/authorize", "./routes/client.authorize.ts"),
     route("server/authorize", "./routes/server.authorize.tsx"),
     route("xstate", "./routes/xstate.tsx"),
+    route("server-toggle", "./routes/server-toggle.tsx"),
   ]),
 ] satisfies RouteConfig;

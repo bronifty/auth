@@ -34,12 +34,16 @@ export const toggleMachine = createMachine({
   },
 });
 
-const actor = createActor(toggleMachine);
+// Create a global actor instance
+export const toggleActor = createActor(toggleMachine);
 
-actor.subscribe((snapshot) => {
-  console.log("State:", snapshot.value);
+// Start the actor
+toggleActor.start();
+
+// Helper to get current state snapshot
+export const getToggleState = () => toggleActor.getSnapshot();
+
+// Subscribe to log state changes if needed
+toggleActor.subscribe((snapshot) => {
+  console.log("State:", snapshot.value, "Count:", snapshot.context.count);
 });
-
-actor.start();
-
-actor.send({ type: "toggle" });
