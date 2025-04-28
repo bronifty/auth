@@ -5,7 +5,27 @@ const buildUrl = function (
   options: Record<string, string>,
   hash?: string
 ) {
-  const newUrl = new URL(base);
+  // Handle relative URLs by prepending the base URL
+  let url = base;
+
+  // Check if the URL is relative (doesn't start with http or https)
+  if (!base.startsWith("http")) {
+    // For server-side (Node.js), we need a full URL
+    // The base URL should be configured based on your environment
+    const baseUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "http://localhost:5173"; // Default to localhost in server environment
+
+    // Ensure we don't have double slashes
+    if (base.startsWith("/")) {
+      url = `${baseUrl}${base}`;
+    } else {
+      url = `${baseUrl}/${base}`;
+    }
+  }
+
+  const newUrl = new URL(url);
 
   Object.keys(options).forEach(function (key) {
     newUrl.searchParams.set(key, options[key]);

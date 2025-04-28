@@ -9,7 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { OAuthProvider } from "./context";
+import { OAuthProvider } from "./components/OAuthProvider";
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -41,10 +42,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
+export default function Root() {
   return (
     <OAuthProvider>
-      <Outlet />
+      <div className="app">
+        <header className="app-header">
+          <h1>OAuth Client App</h1>
+        </header>
+        <main className="app-content">
+          <Outlet />
+        </main>
+        <footer className="app-footer">
+          <p>OAuth Client Example</p>
+        </footer>
+      </div>
     </OAuthProvider>
   );
 }
