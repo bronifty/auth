@@ -11,10 +11,12 @@
   "dependencies": {
     "@react-router/node": "^7.5.2",
     "@react-router/serve": "^7.5.2",
+    "@xstate/react": "^5.0.3",
     "isbot": "^5.1.17",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router": "^7.5.2"
+    "react-router": "^7.5.2",
+    "xstate": "^5.19.2"
   },
   "devDependencies": {
     "@react-router/dev": "^7.5.2",

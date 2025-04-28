@@ -10,5 +10,6 @@ export default [
     index("routes/client.tsx"),
     route("client/authorize", "./routes/client.authorize.ts"),
     route("server/authorize", "./routes/server.authorize.tsx"),
+    route("xstate", "./routes/xstate.tsx"),
   ]),
 ] satisfies RouteConfig;

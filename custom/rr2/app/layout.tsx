@@ -8,6 +8,7 @@ export default function Layout() {
     <>
       <header>
         <Link to="/">Home</Link>
+        <Link to="/xstate">XState</Link>
       </header>
       <Outlet />
       <footer>
