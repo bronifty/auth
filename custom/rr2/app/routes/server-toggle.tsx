@@ -1,11 +1,11 @@
 import { useLoaderData, useFetcher } from "react-router";
-import { toggleActor, getToggleState } from "../state.machine";
+import { actor, getState } from "../state.machine";
 import { useEffect, useState } from "react";
 
 // Server-side loader
 export function loader() {
   // Get current state from the global actor
-  const state = getToggleState();
+  const state = getState();
 
   return Response.json({
     value: state.value,
@@ -21,7 +21,7 @@ export async function action({ request }: { request: Request }) {
 
   if (action === "toggle") {
     // Send toggle event to the global actor
-    toggleActor.send({ type: "toggle" });
+    actor.send({ type: "toggle" });
   }
 
   // Simple redirect
@@ -39,7 +39,7 @@ export default function ServerToggle() {
     if (fetcher.data) {
       setLocalState(fetcher.data);
       // Update the actor with the new state from the server
-      toggleActor.send({ type: "SYNC", data: fetcher.data });
+      actor.send({ type: "SYNC", data: fetcher.data });
     }
   }, [fetcher.data]);
 
