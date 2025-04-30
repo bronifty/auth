@@ -8,7 +8,8 @@ export default function Layout() {
     <>
       <header>
         <Link to="/">Home</Link>
-        <Link to="/xstate">XState</Link>
+        <br></br>
+        <Link to="/server-toggle">Server Toggle</Link>
       </header>
       <Outlet />
       <footer>
