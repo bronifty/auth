@@ -1,9 +1,0 @@
-{
-  "mode": "auto",
-  "routes": [
-    {
-      "path": "/",
-      "component": "./routes/client.tsx"
-    }
-  ]
-}
