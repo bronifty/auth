@@ -19,7 +19,7 @@ let scope = null;
 export default function ClientAuthorize() {
   return (
     <div>
-      <h1>Client Authorize Page</h1>
+      <h1>Server Authorize Page</h1>
       <p>{JSON.stringify(client, null, 2)} </p>
     </div>
   );
