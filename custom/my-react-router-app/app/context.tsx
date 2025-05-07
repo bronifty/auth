@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 interface Client {
   client_id: string;
@@ -11,7 +11,7 @@ const clients: Client[] = [
   {
     client_id: "oauth-client-1",
     client_secret: "oauth-client-secret-1",
-    redirect_uris: ["http://localhost:9000/callback"],
+    redirect_uris: ["http://localhost:5173/callback"],
     scope: "foo bar",
   },
 ];
@@ -65,19 +65,132 @@ interface OAuthContextType {
   requests: Requests;
   codes: Codes;
   tokens: Tokens;
+  addRequest: (
+    requestId: string,
+    request: {
+      response_type: string;
+      client_id: string;
+      redirect_uri: string;
+      state: string;
+    }
+  ) => void;
+  getRequest: (requestId: string) => any;
+  removeRequest: (requestId: string) => void;
+  addCode: (
+    codeId: string,
+    code: { authorizationEndpointRequest: any; scope: string[]; user: string }
+  ) => void;
+  getCode: (codeId: string) => any;
+  removeCode: (codeId: string) => void;
+  addToken: (
+    tokenId: string,
+    token: { access_token: string; client_id: string; scope: string }
+  ) => void;
+  getToken: (tokenId: string) => any;
+  removeToken: (tokenId: string) => void;
 }
 
 const OAuthContext = createContext<OAuthContextType | undefined>(undefined);
 
 export function OAuthProvider({ children }: { children: React.ReactNode }) {
+  const [requestsState, setRequestsState] = useState<Requests>(requests);
+  const [codesState, setCodesState] = useState<Codes>(codes);
+  const [tokensState, setTokensState] = useState<Tokens>(tokens);
+
+  // Request management functions
+  const addRequest = (
+    requestId: string,
+    request: {
+      response_type: string;
+      client_id: string;
+      redirect_uri: string;
+      state: string;
+    }
+  ) => {
+    setRequestsState((prev) => ({
+      ...prev,
+      [requestId]: request,
+    }));
+  };
+
+  const getRequest = (requestId: string) => {
+    return requestsState[requestId];
+  };
+
+  const removeRequest = (requestId: string) => {
+    setRequestsState((prev) => {
+      const newRequests = { ...prev };
+      delete newRequests[requestId];
+      return newRequests;
+    });
+  };
+
+  // Code management functions
+  const addCode = (
+    codeId: string,
+    code: { authorizationEndpointRequest: any; scope: string[]; user: string }
+  ) => {
+    setCodesState((prev) => ({
+      ...prev,
+      [codeId]: code,
+    }));
+  };
+
+  const getCode = (codeId: string) => {
+    return codesState[codeId];
+  };
+
+  const removeCode = (codeId: string) => {
+    setCodesState((prev) => {
+      const newCodes = { ...prev };
+      delete newCodes[codeId];
+      return newCodes;
+    });
+  };
+
+  // Token management functions
+  const addToken = (
+    tokenId: string,
+    token: { access_token: string; client_id: string; scope: string }
+  ) => {
+    setTokensState((prev) => ({
+      ...prev,
+      [tokenId]: token,
+    }));
+  };
+
+  const getToken = (tokenId: string) => {
+    return tokensState[tokenId];
+  };
+
+  const removeToken = (tokenId: string) => {
+    setTokensState((prev) => {
+      const newTokens = { ...prev };
+      delete newTokens[tokenId];
+      return newTokens;
+    });
+  };
+
   const value = {
     clients,
     endpoints,
-    requests,
-    codes,
-    tokens,
+    requests: requestsState,
+    codes: codesState,
+    tokens: tokensState,
+    addRequest,
+    getRequest,
+    removeRequest,
+    addCode,
+    getCode,
+    removeCode,
+    addToken,
+    getToken,
+    removeToken,
   };
-  return <OAuthContext value={value}>{children}</OAuthContext>;
+
+  return (
+    <OAuthContext.Provider value={value}>{children}</OAuthContext.Provider>
+  );
 }
 
 export function useOAuth() {

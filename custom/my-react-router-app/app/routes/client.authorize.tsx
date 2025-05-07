@@ -1,8 +1,8 @@
-import type { Route } from "./+types/routes/resource/client/authorize";
+import type { Route } from "./+types/client.authorize";
 import randomstring from "randomstring";
 import { redirect, useNavigate } from "react-router";
-import { getOAuthState, addRequest } from "../../../store/oauth";
-import { buildUrl } from "../../../utils";
+import { getOAuthState, addRequest } from "../store/oauth";
+import { buildUrl } from "../utils";
 
 export async function loader(_: Route.LoaderArgs) {
   // // Get the current state from XState
