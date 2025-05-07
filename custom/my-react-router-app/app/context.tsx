@@ -23,9 +23,9 @@ interface Endpoints {
 }
 
 const endpoints: Endpoints = {
-  authorizationEndpoint: "server/authorize",
-  tokenEndpoint: "http://localhost:5173/token",
-  protectedResource: "http://localhost:5173/resource",
+  authorizationEndpoint: "http://localhost:5173/server/authorize",
+  tokenEndpoint: "http://localhost:5173/server/token",
+  protectedResource: "http://localhost:5173/api/resource",
 };
 
 interface Requests {
@@ -193,7 +193,9 @@ export function OAuthProvider({ children }: { children: React.ReactNode }) {
     removeToken,
   };
 
-  return <OAuthContext value={value}>{children}</OAuthContext>;
+  return (
+    <OAuthContext.Provider value={value}>{children}</OAuthContext.Provider>
+  );
 }
 
 export function useOAuth() {
