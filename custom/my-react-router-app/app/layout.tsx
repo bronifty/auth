@@ -10,6 +10,7 @@ export default function Layout() {
       <header>
         <Link to="/">Home</Link>
       </header>
+      <hr />
       <Outlet />
       <footer>
         <hr />
