@@ -1,7 +1,14 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import {
+  type RouteConfig,
+  index,
+  route,
+  layout,
+} from "@react-router/dev/routes";
 
 export default [
-  index("routes/client.tsx"),
-  route("client/authorize", "./routes/client.authorize.tsx"),
-  route("server/authorize", "./routes/server.authorize.tsx"),
+  layout("layout.tsx", [
+    index("routes/client.tsx"),
+    route("client/authorize", "./routes/client.authorize.tsx"),
+    route("server/authorize", "./routes/server.authorize.tsx"),
+  ]),
 ] satisfies RouteConfig;
