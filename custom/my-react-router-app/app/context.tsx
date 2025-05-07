@@ -24,8 +24,8 @@ interface Endpoints {
 
 const endpoints: Endpoints = {
   authorizationEndpoint: "server/authorize",
-  tokenEndpoint: "http://localhost:9001/token",
-  protectedResource: "http://localhost:9002/resource",
+  tokenEndpoint: "http://localhost:5173/token",
+  protectedResource: "http://localhost:5173/resource",
 };
 
 interface Requests {
@@ -62,6 +62,8 @@ const tokens: Tokens = {};
 interface OAuthContextType {
   clients: Client[];
   endpoints: Endpoints;
+  state: string;
+  setState: (state: string) => void;
   requests: Requests;
   codes: Codes;
   tokens: Tokens;
@@ -96,6 +98,7 @@ export function OAuthProvider({ children }: { children: React.ReactNode }) {
   const [requestsState, setRequestsState] = useState<Requests>(requests);
   const [codesState, setCodesState] = useState<Codes>(codes);
   const [tokensState, setTokensState] = useState<Tokens>(tokens);
+  const [state, setState] = useState<string>("");
 
   // Request management functions
   const addRequest = (
@@ -174,6 +177,8 @@ export function OAuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     clients,
     endpoints,
+    state,
+    setState,
     requests: requestsState,
     codes: codesState,
     tokens: tokensState,
@@ -188,9 +193,7 @@ export function OAuthProvider({ children }: { children: React.ReactNode }) {
     removeToken,
   };
 
-  return (
-    <OAuthContext.Provider value={value}>{children}</OAuthContext.Provider>
-  );
+  return <OAuthContext value={value}>{children}</OAuthContext>;
 }
 
 export function useOAuth() {
